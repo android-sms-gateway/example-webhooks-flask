@@ -57,7 +57,15 @@ def create_app():
 
         print("Received SMS:")
         print(f"SIM: {payload.payload.sim_number}")
-        print(f"From: {payload.payload.phone_number}")
+        phone_number = payload.payload.phone_number
+        masked_phone_number = (
+            ("*" * len(phone_number))
+            if phone_number and len(phone_number) <= 4
+            else (("*" * (len(phone_number) - 4)) + phone_number[-4:])
+            if phone_number
+            else "<redacted>"
+        )
+        print(f"From: {masked_phone_number}")
         print(f"Message: {payload.payload.message}")
         print(f"Received at: {payload.payload.received_at}")
 
@@ -78,7 +86,7 @@ def register_webhook() -> None | str:
 
     with httpx.Client() as client:
         response = client.post(
-            f"{current_app.config["SMS_GATE_API_URL"]}/webhooks",
+            f"{current_app.config['SMS_GATE_API_URL']}/webhooks",
             auth=(
                 current_app.config["SMS_GATE_API_USERNAME"],
                 current_app.config["SMS_GATE_API_PASSWORD"],
@@ -106,14 +114,14 @@ def unregister_webhook(webhook_id: str | None):
 
     with httpx.Client() as client:
         response = client.delete(
-            f"{current_app.config['SMS_GATE_API_URL']}/webhooks/{current_app.config["WEBHOOK_ID"]}",
+            f"{current_app.config['SMS_GATE_API_URL']}/webhooks/{current_app.config['WEBHOOK_ID']}",
             auth=(
                 current_app.config["SMS_GATE_API_USERNAME"],
                 current_app.config["SMS_GATE_API_PASSWORD"],
             ),
         )
         response.raise_for_status()
-        print(f"Unregistered webhook ID: {current_app.config["WEBHOOK_ID"]}")
+        print(f"Unregistered webhook ID: {current_app.config['WEBHOOK_ID']}")
 
 
 if __name__ == "__main__":

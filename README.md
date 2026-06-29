@@ -115,7 +115,7 @@ WARNING: This is a development server. Do not use it in a production deployment.
 Press CTRL+C to quit
 Received SMS:
 SIM: 1
-From: 6505551212
+From: ******1212
 Message: Android is always a sweet treat!
 Received at: 2025-04-15 15:50:56+07:00
 127.0.0.1 - - [15/Apr/2025 15:50:59] "POST /webhook/sms-received HTTP/1.1" 200 -
